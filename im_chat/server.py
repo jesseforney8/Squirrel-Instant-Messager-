@@ -5,7 +5,7 @@ import socket
 HEADER = 64
 FORMAT = "utf-8"
 DISCONNECT_MESSAGE = "!DISCONNECT"
-PORT = 5050
+PORT = 4444
 
 #get ip from hostname
 SERVER = socket.gethostbyname(socket.gethostname())
