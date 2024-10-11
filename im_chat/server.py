@@ -17,6 +17,17 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #bound this socket to this address
 server.bind(ADDR)
 
+
+
+#client to client comms
+
+all_msgs = []
+all_clients = []
+
+
+
+
+
 def hand_client(conn, addr):
     print(f"New connection! {addr}")
 
@@ -27,15 +38,18 @@ def hand_client(conn, addr):
         if msg_length:
             msg_length = int(msg_length)
             msg = conn.recv(msg_length).decode(FORMAT)
-            print(f"{addr}, {msg}")
-            conn.send(f"Message Recieved! {msg}".encode(FORMAT))
 
+            all_msgs.append(msg)
+
+
+            
+            broadcast()
+
+
+            #disconnect logic
             if msg == DISCONNECT_MESSAGE:
                 connected = False
                 print(f"{addr} disconnected!")
-            
-            
-    
     conn.close()
 
 
@@ -45,9 +59,22 @@ def start():
     while True:
         #stores client connections in tuple
         conn, addr = server.accept()
+
+        all_clients.append(conn)
+
+
         thread = threading.Thread(target=hand_client, args=(conn, addr))
         thread.start()
         print(f"Active connections: {threading.active_count() - 1}")
+
+
+
+def broadcast():
+    for c in all_clients:
+        c.send(f"{all_msgs}".encode(FORMAT))
+
+
+
 
 
 

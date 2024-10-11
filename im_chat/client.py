@@ -1,5 +1,6 @@
 import socket
 
+
 HEADER = 64
 FORMAT = "utf-8"
 DISCONNECT_MESSAGE = "!DISCONNECT"
@@ -9,9 +10,12 @@ ADDR = (SERVER, PORT)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-client.connect(ADDR)
+
+def connect():
+    client.connect(ADDR)
 
 def send(msg):
+    
     message = msg.encode(FORMAT)
     msg_length = len(msg)
     send_length = str(msg_length).encode(FORMAT)
@@ -20,4 +24,13 @@ def send(msg):
     client.send(message)
     
 def client_rec():
-    return client.recv(2048).decode(FORMAT)
+    msg_list = client.recv(2048).decode(FORMAT)
+    msg_list = msg_list.replace("'", "")
+    msg_list = msg_list.replace('[', "")
+    msg_list = msg_list.replace(']', "")
+
+
+
+    msg_list = msg_list.split(",")
+    print(type(msg_list))
+    return msg_list

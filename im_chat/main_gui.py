@@ -1,20 +1,26 @@
 import tkinter as tk
 from tkinter import StringVar, ttk
-from client import send, client_rec
+from client import send, client_rec, connect
 import random
 
 #fucns
 
 def submit_msg():
-    try:
+
         msg = input1.get()
         input1.delete(0, tk.END)
+
+        try:
+            connect()
+        except:
+              pass
         send(msg)
         reply = client_rec()
         v.set(reply)
-        my_tree.insert(parent="", index="end", iid=random.randrange(start=1, stop=3000), text="", values=(reply,))
-    except:
-        pass
+        my_tree.delete(*my_tree.get_children())
+        for msg in reply:
+            my_tree.insert(parent="", index="end", iid=random.randrange(start=1, stop=3000), text="", values=(msg,))
+    
 
 
     
@@ -24,9 +30,9 @@ def submit_msg():
 root = tk.Tk()
 root.geometry("600x600")
 
-frame1 = tk.Frame(root)
+frame1 = tk.Frame(root, width=300)
 
-my_tree = ttk.Treeview(frame1)
+my_tree = ttk.Treeview(frame1, height=15)
 
 my_tree["columns"] = ("msg")
 
